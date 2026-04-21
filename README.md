@@ -26,6 +26,21 @@
 
 ---
 
+
+
+
+##   𝐀𝐧𝐠𝐠𝐨𝐭𝐚 𝐊𝐞𝐥𝐨𝐦𝐩𝐨𝐤
+  
+| Isrina Luthfiah | Nayla Camelia Indraswari | Dilla Maharani| Muhammad Refi Fadhilah |
+|---------------|------------|------|--------------------|
+| <div align="center"><img src="https://github.com/user-attachments/assets/72ad3207-c69e-44ee-802a-ab093f621568"  width="250"></div> | <div align="center"><img " width="240"></div> | <div align="center"><img " width="240"></div> | <div align="center"><img width="240"></div> |
+| <div align="center">2409116003</div> | <div align="center">2409116009</div> | <div align="center">2409116023</div> | <div align="center">2409116034</div> |
+| <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> |
+| <div align="center"><a href="https://github.com/rinaaluthfiah"><img src="https://img.shields.io/badge/GitHub-Isrina-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/angiee24"><img src="https://img.shields.io/badge/GitHub-Angela-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/Zahraramadhani014"><img src="https://img.shields.io/badge/GitHub-Zahra-grey?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/aliyah06667"><img src="https://img.shields.io/badge/GitHub-Aliyah-grey?style=for-the-badge&logo=github"></a></div> |
+
+
+
+
 ## 📌 Latar Belakang
 
 Industri perhotelan menghasilkan volume data transaksi yang sangat besar setiap harinya — mulai dari data pemesanan, pembatalan, segmentasi tamu, hingga performa saluran distribusi. Tanpa infrastruktur analitik yang tepat, data ini hanya menjadi tumpukan angka yang sulit dieksplorasi.
