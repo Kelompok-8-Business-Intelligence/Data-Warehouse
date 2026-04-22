@@ -112,14 +112,20 @@ Dataset kemudian dimuat ke dalam memori untuk diproses pada tahap berikutnya.
 Tahap transform bertujuan untuk memastikan data bersih, konsisten, dan siap digunakan dalam analisis.
 
 Beberapa proses transformasi yang dilakukan antara lain:
+
 .☘︎ ݁˖ Data Cleaning
 Mengisi nilai kosong (missing values) pada beberapa kolom seperti:
-children
-country
-agent
-company
-Menghapus data yang tidak valid seperti nilai ADR negatif
-Menghapus data reservasi tanpa tamu
+- children
+  
+- country
+  
+- agent
+  
+- company
+
+- Menghapus data yang tidak valid seperti nilai ADR negatif
+
+- Menghapus data reservasi tanpa tamu
 
 ✦ Feature Engineering
 
