@@ -6,7 +6,7 @@
 | Keterangan | Detail |
 |------------|--------|
 | **Mata Kuliah** | Business Intelligence |
-| **Dosen Pengampu** | Ahmad Irsyad |
+| **Dosen Pengampu** | Dr. Akhmad Irsyad S.T.,M.Kom |
 | **Universitas** | Universitas Mulawarman |
 | **Tahun** | 2026 |
 
