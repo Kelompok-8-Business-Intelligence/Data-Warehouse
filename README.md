@@ -1,6 +1,9 @@
 #  𝐔𝐓𝐒 𝐁𝐔𝐒𝐈𝐍𝐄𝐒𝐒 𝐈𝐍𝐓𝐄𝐋𝐋𝐈𝐆𝐄𝐍𝐂𝐄 - 𝐇𝐨𝐭𝐞𝐥 𝐁𝐨𝐨𝐤𝐢𝐧𝐠 🏢
+<p align="justify">
+Project ini bertujuan untuk mengintegrasikan data pemesanan hotel ke dalam Data Warehouse guna mendukung proses analisis data. Dataset Hotel Booking Demand digunakan untuk mengidentifikasi pola reservasi, perilaku pelanggan, serta faktor yang mempengaruhi kinerja pemesanan hotel.
+</p>
 
-  
+
 ## 📚 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘀𝗶 𝗠𝗮𝘁𝗮 𝗞𝘂𝗹𝗶𝗮𝗵
 
 | Keterangan | Detail |
@@ -61,7 +64,7 @@ Industri perhotelan menghasilkan data transaksi yang cukup besar setiap harinya,
 ## ★ ˎˊ˗ Tujuan Proyek
 
 1. **Membangun Data Warehouse** dari data hotel booking menggunakan pendekatan Kimball Bottom-Up dengan model Star Schema
-2. **Merancang pipeline ETL** yang bersih dan terdokumentasi (Extract → Transform → Load)
+2. **Merancang pipeline ETL** yang bersih dan terdokumentasi (Extract, Transform, Load)
 3. **Melakukan analisis OLAP** untuk menjawab pertanyaan bisnis kritis
 4. **Menghasilkan laporan eksekutif** berupa KPI Dashboard dan Business Insights
 5. **Mendokumentasikan ETL lineage** melalui Metadata Repository
@@ -85,29 +88,31 @@ Industri perhotelan menghasilkan data transaksi yang cukup besar setiap harinya,
 
 ## ⚙️ Tahapan Proses ETL
 
-### 1️⃣ Extract — Pengambilan Data
+### 1️⃣ Extract [Pengambilan Data]
 
-Pada tahap ini, dataset Hotel Booking Demand dibaca dari file CSV menggunakan Python. Dataset ini berisi informasi pemesanan hotel seperti data pelanggan, tipe kamar, durasi menginap, hingga pembatalan reservasi.
+> Pada tahap ini, dataset Hotel Booking Demand dibaca dari file CSV menggunakan Python. Dataset ini berisi informasi pemesanan hotel seperti data pelanggan, tipe kamar, durasi menginap, hingga pembatalan reservasi.
 
 Karakteristik dataset:
 
-Jumlah data : 119.390 record
-Periode data : 2015 – 2017
-Jumlah kolom : 32 atribut
-Jenis hotel : City Hotel & Resort Hotel
+󠁯 󠁯•󠁏 Jumlah data : 119.390 record
+
+󠁯 󠁯•󠁏 Periode data : 2015 – 2017
+
+󠁯 󠁯•󠁏 Jumlah kolom : 32 atribut
+
+󠁯 󠁯•󠁏 Jenis hotel : City Hotel & Resort Hotel
 
 Dataset kemudian dimuat ke dalam memori untuk diproses pada tahap berikutnya.
 
 
 ---
 
-### 2️⃣ Transform — Pembersihan & Pengolahan Data
+### 2️⃣ Transform [Pembersihan & Pengolahan Data]
 
 Tahap transform bertujuan untuk memastikan data bersih, konsisten, dan siap digunakan dalam analisis.
 
 Beberapa proses transformasi yang dilakukan antara lain:
-
-🔹 Data Cleaning
+.☘︎ ݁˖ Data Cleaning
 Mengisi nilai kosong (missing values) pada beberapa kolom seperti:
 children
 country
@@ -116,7 +121,7 @@ company
 Menghapus data yang tidak valid seperti nilai ADR negatif
 Menghapus data reservasi tanpa tamu
 
- 🔹 Feature Engineering
+✦ Feature Engineering
 
 > Beberapa atribut baru dibuat untuk mempermudah proses analisis data.
 
@@ -133,7 +138,7 @@ Setelah proses transformasi selesai, dataset menjadi lebih bersih dan siap dimas
 
 ---
 
-### 3️⃣ Load — Pembuatan Data Warehouse
+### 3️⃣ Load [Pembuatan Data Warehouse]
 
 Tahap terakhir adalah memuat data yang sudah diproses ke dalam Data Warehouse.
 
