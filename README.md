@@ -37,7 +37,7 @@ Project ini bertujuan untuk mengintegrasikan data pemesanan hotel ke dalam Data 
 | **Periode** | Juli 2015 – Agustus 2017 |
 | **Jumlah Kolom** | 32 kolom |
 | **Jenis Hotel** | City Hotel & Resort Hotel |
-| **Ukuran File** | ~23 MB |
+
 
 
 
@@ -71,13 +71,6 @@ Industri perhotelan menghasilkan data transaksi yang cukup besar setiap harinya,
 
 ---
 
-## 🏗️ Arsitektur Sistem
-
-<img width="900" height="445" alt="image" src="https://github.com/user-attachments/assets/622a052c-d3b0-49a2-a2e5-ac683ee25c82" />
-
-
-
-
 ## ⛃ Tools 
 - **Storage**: SQLite (persistent) + DuckDB (in-memory OLAP)
 - **Processing**: Python, pandas, NumPy
@@ -85,119 +78,127 @@ Industri perhotelan menghasilkan data transaksi yang cukup besar setiap harinya,
 - **Model**: Kimball Star Schema (Bottom-Up)
 
 
+## 🏗️ Arsitektur Sistem
+
+<img width="842" height="289" alt="Screenshot 2026-04-24 013435" src="https://github.com/user-attachments/assets/221979e1-23a3-4899-82eb-f98d8f36db61" />
+
+<p align="justify">
+Arsitektur sistem Data Warehouse pada proyek ini terdiri dari beberapa komponen utama, yaitu sumber data, proses ETL, penyimpanan data dalam Data Warehouse berbasis Star Schema, serta modul analisis yang digunakan untuk menghasilkan insight bisnis.
+</p>
+
 
 ## ⚙️ Tahapan Proses ETL
 
-### 1️⃣ Extract [Pengambilan Data]
+<div style="border:1px solid #d0d7de; padding:16px; border-radius:10px; background-color:#e8f2ff;">
 
-> Pada tahap ini, dataset Hotel Booking Demand dibaca dari file CSV menggunakan Python. Dataset ini berisi informasi pemesanan hotel seperti data pelanggan, tipe kamar, durasi menginap, hingga pembatalan reservasi.
+<h3>1️⃣ Extract [Pengambilan Data]</h3>
 
-Karakteristik dataset:
+<p>
+ Dataset <b>Hotel Booking Demand</b> dibaca dari file CSV menggunakan Python. 
+Dataset ini berisi informasi pemesanan hotel seperti data pelanggan, tipe kamar, durasi menginap, hingga pembatalan reservasi.
+</p>
 
-󠁯 󠁯•󠁏 Jumlah data : 119.390 record
+<p><b>Karakteristik dataset:</b></p>
 
-󠁯 󠁯•󠁏 Periode data : 2015 – 2017
+<ul>
+<li>📊 Jumlah data: <b>119.390 record</b></li>
+<li>📅 Periode data: <b>2015 – 2017</b></li>
+<li>🧾 Jumlah kolom: <b>32 atribut</b></li>
+<li>🏨 Jenis hotel: <b>City Hotel & Resort Hotel</b></li>
+</ul>
 
-󠁯 󠁯•󠁏 Jumlah kolom : 32 atribut
-
-󠁯 󠁯•󠁏 Jenis hotel : City Hotel & Resort Hotel
-
+<p>
 Dataset kemudian dimuat ke dalam memori untuk diproses pada tahap berikutnya.
+</p>
 
-
----
-
-### 2️⃣ Transform [Pembersihan & Pengolahan Data]
-
-Tahap transform bertujuan untuk memastikan data bersih, konsisten, dan siap digunakan dalam analisis.
-
-Beberapa proses transformasi yang dilakukan antara lain:
-
-.☘︎ ݁˖ Data Cleaning
-Mengisi nilai kosong (missing values) pada beberapa kolom seperti:
-- children
-  
-- country
-  
-- agent
-  
-- company
-
-- Menghapus data yang tidak valid seperti nilai ADR negatif
-
-- Menghapus data reservasi tanpa tamu
-
-✦ Feature Engineering
-
-> Beberapa atribut baru dibuat untuk mempermudah proses analisis data.
-
-| Kolom Baru | Keterangan |
-|------------|------------|
-| `arrival_date` | tanggal lengkap kedatangan tamu |
-| `total_nights` | total malam menginap |
-| `total_guests` | jumlah total tamu |
-| `total_revenue` | estimasi pendapatan dari booking |
-| `is_family` | menandai apakah tamu datang bersama keluarga |
-| `room_upgraded` | menandai apakah terjadi upgrade kamar |
-
-Setelah proses transformasi selesai, dataset menjadi lebih bersih dan siap dimasukkan ke dalam Data Warehouse.
-
----
-
-### 3️⃣ Load [Pembuatan Data Warehouse]
-
-Tahap terakhir adalah memuat data yang sudah diproses ke dalam Data Warehouse.
-
-Model yang digunakan adalah Kimball Star Schema, karena struktur ini memudahkan proses analisis dan query bisnis.
-
-Struktur Data Warehouse terdiri dari:
-
-⭐ Tabel Fakta
-fact_booking
-
-Berisi data utama transaksi pemesanan hotel.
-
-📊 Tabel Dimensi
-dim_date
-dim_hotel
-dim_customer
-dim_market
-dim_room
-
-Tabel dimensi digunakan untuk menyimpan informasi deskriptif yang mendukung analisis.
+</div>
 
 
 
-## 🌟 Desain Data Warehouse — Star Schema
+ ### 2️⃣ Transform [Pembersihan & Pengolahan Data]
+
+ Tahap transform dilakukan untuk memastikan data berada dalam kondisi **bersih, konsisten, dan siap digunakan** dalam proses analisis.
+
+ #### 🧹 Data Cleaning
+
+ | Aktivitas | Keterangan |
+ |-----------|------------|
+ | Missing values | Mengisi nilai kosong pada `children`, `country`, `agent`, dan `company` |
+ | Data tidak valid | Menghapus nilai `ADR` negatif |
+ | Data tidak relevan | Menghapus reservasi tanpa tamu |
+
+ #### ⚙️ Feature Engineering
+
+ | Kolom Baru | Keterangan |
+ |------------|------------|
+ | `arrival_date` | Tanggal lengkap kedatangan tamu |
+ | `total_nights` | Total malam menginap |
+ | `total_guests` | Jumlah total tamu |
+ | `total_revenue` | Estimasi pendapatan dari booking |
+ | `is_family` | Menandai apakah tamu datang bersama keluarga |
+ | `room_upgraded` | Menandai apakah terjadi upgrade kamar |
+
+ Setelah proses transformasi selesai, dataset menjadi lebih bersih dan siap dimasukkan ke dalam Data Warehouse.
+
+
+ ### 3️⃣ Load [Pembuatan Data Warehouse]
+
+ Tahap ini merupakan proses pemuatan data yang telah dibersihkan ke dalam **Data Warehouse** untuk mendukung analisis lebih lanjut.
+
+ Model yang digunakan adalah **Kimball Star Schema**, karena mampu mempermudah proses query dan analisis bisnis.
+
+ #### ⭐ Tabel Fakta
+ - `fact_booking`  
+   → Menyimpan data utama transaksi pemesanan hotel
+
+ #### 📊 Tabel Dimensi
+ - `dim_date`  
+ - `dim_hotel`  
+ - `dim_customer`  
+ - `dim_market`  
+ - `dim_room`  
+
+ Tabel dimensi digunakan untuk menyimpan informasi deskriptif yang berfungsi sebagai konteks dalam proses analisis data.
 
 
 
-<img width="702" height="692" alt="star scema drawio" src="https://github.com/user-attachments/assets/7cf2715a-cbc6-41c2-ad6b-72b84a7064d1" />
+## ✒️ Desain Data Warehouse — Star Schema
 
 
+
+<img width="701" height="691" alt="star scema drawio (1)" src="https://github.com/user-attachments/assets/bb0b9581-08e7-4e10-b2cf-e2839c8fbb97" />
+
+<p align="justify">
+Struktur Data Warehouse dirancang menggunakan model Star Schema, di mana tabel fakta berada di pusat dan terhubung dengan tabel dimensi. Model ini memudahkan proses analisis data, terutama dalam melakukan query bisnis dan pengolahan OLAP.
+</p>
 
 
 
 ## 💡 Strategic Business Insights
 
-### Insight 1 — Revenue & Skala
+### Insight 1 
+  Revenue & Skala
 - City Hotel mendominasi **volume booking**, namun Resort Hotel memegang **ADR premium** terutama di musim panas (Juli–Agustus).
 
-### Insight 2 — Risiko Pembatalan (Kritis)
+### Insight 2  
+  Risiko Pembatalan (Kritis)
 - Cancellation rate ~37% **jauh di atas** benchmark industri (~20%).
 - Deposit jenis *Non Refund* terbukti menekan pembatalan secara drastis.
 - **Rekomendasi:** Terapkan kebijakan deposit berlapis — wajibkan non-refundable untuk pemesanan dengan *lead time* > 90 hari.
 
-### Insight 3 — Nilai Tamu Loyal
+### Insight 3 
+  Nilai Tamu Loyal
 - *Returning guests* mencatat **durasi menginap lebih panjang** dan ADR lebih tinggi.
 - **Rekomendasi:** Investasikan program loyalitas (early check-in, upgrade otomatis setelah 3 kunjungan, penawaran personal).
 
-### Insight 4 — Strategi Musim Puncak
+### Insight 4 
+  Strategi Musim Puncak
 - **Top 3 bulan pendapatan:** Agustus, Juli, Oktober.
 - Konsentrasi Juli–Agustus menunjukkan ketergantungan tinggi pada tamu leisure.
 - **Rekomendasi:** Kembangkan paket korporat untuk Q1 & Q4 guna mengurangi kesenjangan musiman.
 
-### Insight 5 — Efisiensi Saluran Distribusi
+### Insight 5 
+  Efisiensi Saluran Distribusi
 - *Online Travel Agent (OTA)* menghasilkan volume tertinggi namun juga **cancel rate tertinggi** — mencerminkan tamu yang price-sensitive dan low-commitment.
 - Direct channel menunjukkan cancel rate 30–40% lebih rendah.
 - **Rekomendasi:** Insentif direct booking (best price guarantee, exclusive perks).
@@ -206,7 +207,7 @@ Tabel dimensi digunakan untuk menyimpan informasi deskriptif yang mendukung anal
 
 ---
 
-## 📁 Struktur Repositori
+## 🗃️ Struktur Repositori
 
 ```
 hotel-booking-dw/
@@ -280,7 +281,7 @@ print(df)
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## 🌐 Teknologi yang Digunakan
 
 | Kategori | Tool / Library | Versi |
 |---|---|---|
@@ -292,50 +293,8 @@ print(df)
 | **Notebook** | Jupyter / Google Colab | — |
 | **DW Architecture** | Kimball Star Schema | — |
 
-**`requirements.txt`:**
-```
-pandas>=1.5.0
-numpy>=1.23.0
-duckdb>=0.8.0
-matplotlib>=3.6.0
-seaborn>=0.12.0
-jupyter>=1.0.0
-```
-
----
-
-## 📝 ETL Lineage — Metadata Repository
-
-| Source Field | DW Table | DW Field | Transformasi |
-|---|---|---|---|
-| `hotel` | `dim_hotel` | `hotel_name` | Direct map |
-| `arrival_date_year/month/day` | `dim_date` | `date_key` | Concat → YYYYMMDD |
-| `customer_type` | `dim_customer` | `customer_type` | Direct map |
-| `country` | `dim_customer` | `country` | fillna → `'Unknown'` |
-| `children + babies > 0` | `dim_customer` | `is_family` | Derived flag (0/1) |
-| `market_segment` | `dim_market` | `market_segment` | Direct map |
-| `distribution_channel` | `dim_market` | `distribution_channel` | Direct map |
-| `deposit_type` | `dim_market` | `deposit_type` | Direct map |
-| `reserved_room_type` | `dim_room` | `reserved_room_type` | Direct map |
-| `adr` | `fact_booking` | `adr` | Filter `adr >= 0` |
-| `adr × total_nights` | `fact_booking` | `total_revenue` | Derived: perkalian |
-| `weekend + weekday nights` | `fact_booking` | `total_nights` | Derived: penjumlahan |
-| `adults + children + babies` | `fact_booking` | `total_guests` | Derived: penjumlahan |
-| `reserved ≠ assigned` | `fact_booking` | `room_upgraded` | Derived flag (0/1) |
-
----
-
-## ✅ Hasil & Temuan
 
 
-| Poin Evaluasi | Status | Keterangan |
-|---|---|---|
-| **Data Warehouse dari data terpilih** | ✅ Lengkap | Star Schema dengan 5 dimensi + 1 tabel fakta, disimpan ke SQLite |
-| **Laporan** | ✅ Lengkap | KPI Dashboard (8 KPI card) + 6 chart analitik + Strategic Insights |
-| **Latar Belakang** | ✅ Tercakup | Konteks bisnis hotel, masalah data, & justifikasi DW (lihat Section 0 & intro notebook) |
-| **Tahapan Proses** | ✅ Lengkap | Section 1–3: Extract → Transform → Load, dengan kode & penjelasan |
-| **ETL** | ✅ Lengkap | Cleaning, feature engineering, surrogate key mapping, metadata repository |
-| **Analisis Data** | ✅ Lengkap | 5 OLAP query + 6 visualisasi + 5 strategic insights + 90-day roadmap |
 
----
+
 
