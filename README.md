@@ -21,7 +21,7 @@ Project ini bertujuan untuk mengintegrasikan data pemesanan hotel ke dalam Data 
 | <div align="center"><img src="https://github.com/user-attachments/assets/50351347-5da8-41ec-89b8-4958d80b9d10"   width="200"></div> | <div align="center"><img src="https://github.com/user-attachments/assets/e2e91fb9-5571-4255-9105-149632ebeafb" width="215"></div> | <div align="center"><img src="https://github.com/user-attachments/assets/381b595d-7d93-47dc-9848-9423666a2085" width="210"></div> | <div align="center"><img src="https://github.com/user-attachments/assets/f8693272-f6be-487a-9d99-37ef7f04d229" width="250"></div> |
 | <div align="center">2409116003</div> | <div align="center">2409116009</div> | <div align="center">2409116023</div> | <div align="center">2409116034</div> |
 | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> | <div align="center">Sistem Informasi A '24</div> |
-| <div align="center"><a href="https://github.com/rinaaluthfiah"><img src="https://img.shields.io/badge/GitHub-Isrina-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/naylacamelia"><img src="https://img.shields.io/badge/GitHub-Nayla-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/dillamhrn"><img src="https://img.shields.io/badge/GitHub-Dilla-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/aliyah06667"><img src="https://img.shields.io/badge/GitHub-Reffi-pink?style=for-the-badge&logo=github"></a></div> |
+| <div align="center"><a href="https://github.com/rinaaluthfiah"><img src="https://img.shields.io/badge/GitHub-Isrina-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/naylacamelia"><img src="https://img.shields.io/badge/GitHub-Nayla-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/dillamhrn"><img src="https://img.shields.io/badge/GitHub-Dilla-pink?style=for-the-badge&logo=github"></a></div> | <div align="center"><a href="https://github.com/Refficmd"><img src="https://img.shields.io/badge/GitHub-Reffi-pink?style=for-the-badge&logo=github"></a></div> |
 
 
 
@@ -170,38 +170,9 @@ Tabel dimensi digunakan untuk menyimpan informasi deskriptif yang mendukung anal
 
 ## 🌟 Desain Data Warehouse — Star Schema
 
-```
-                     ┌──────────────┐
-                     │   dim_date   │
-                     │ ─────────── │
-                     │ date_key PK  │
-                     │ full_date    │
-                     │ year         │
-                     │ quarter      │
-                     │ month_name   │
-                     └──────┬───────┘
-                            │
-   ┌──────────────┐         │         ┌──────────────┐
-   │  dim_hotel   │         │         │ dim_customer  │
-   │ ──────────── │         │         │ ──────────── │
-   │ hotel_key PK │         │         │customer_key  │
-   │ hotel_name   │         │         │customer_type │
-   └──────┬───────┘         │         │country       │
-          │                 │         │is_repeated   │
-          │        ┌────────┴──────┐  │is_family     │
-          └────────┤ fact_booking  ├──┘
-                   │ ──────────── │
-   ┌──────────────┐│ booking_id PK│┌──────────────┐
-   │  dim_market  ││ date_key FK  ││   dim_room   │
-   │ ──────────── ││ hotel_key FK ││ ──────────── │
-   │ market_key PK││customer_key  ││ room_key PK  │
-   │ market_seg.  ││ market_key   ││ reserved_rt  │
-   │ dist_channel ││ room_key FK  ││ assigned_rt  │
-   │ deposit_type ││ is_canceled  ││ meal         │
-   └──────────────┘│ total_rev    │└──────────────┘
-                   │ adr          │
-                   └──────────────┘
-```
+
+
+<img width="702" height="692" alt="star scema drawio" src="https://github.com/user-attachments/assets/7cf2715a-cbc6-41c2-ad6b-72b84a7064d1" />
 
 
 
