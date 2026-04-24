@@ -89,78 +89,158 @@ Arsitektur sistem Data Warehouse pada proyek ini terdiri dari beberapa komponen 
 
 ## ⚙️ Tahapan Proses ETL
 
-<div style="border:1px solid #d0d7de; padding:16px; border-radius:10px; background-color:#e8f2ff;">
-
-<h3>1️⃣ Extract [Pengambilan Data]</h3>
-
-<p>
- Dataset <b>Hotel Booking Demand</b> dibaca dari file CSV menggunakan Python. 
-Dataset ini berisi informasi pemesanan hotel seperti data pelanggan, tipe kamar, durasi menginap, hingga pembatalan reservasi.
-</p>
-
-<p><b>Karakteristik dataset:</b></p>
-
-<ul>
-<li>📊 Jumlah data: <b>119.390 record</b></li>
-<li>📅 Periode data: <b>2015 – 2017</b></li>
-<li>🧾 Jumlah kolom: <b>32 atribut</b></li>
-<li>🏨 Jenis hotel: <b>City Hotel & Resort Hotel</b></li>
-</ul>
-
-<p>
-Dataset kemudian dimuat ke dalam memori untuk diproses pada tahap berikutnya.
-</p>
-
-</div>
-
-
-
- ### 2️⃣ Transform [Pembersihan & Pengolahan Data]
-
- Tahap transform dilakukan untuk memastikan data berada dalam kondisi **bersih, konsisten, dan siap digunakan** dalam proses analisis.
-
- #### 🧹 Data Cleaning
-
- | Aktivitas | Keterangan |
- |-----------|------------|
- | Missing values | Mengisi nilai kosong pada `children`, `country`, `agent`, dan `company` |
- | Data tidak valid | Menghapus nilai `ADR` negatif |
- | Data tidak relevan | Menghapus reservasi tanpa tamu |
-
- #### ⚙️ Feature Engineering
-
- | Kolom Baru | Keterangan |
- |------------|------------|
- | `arrival_date` | Tanggal lengkap kedatangan tamu |
- | `total_nights` | Total malam menginap |
- | `total_guests` | Jumlah total tamu |
- | `total_revenue` | Estimasi pendapatan dari booking |
- | `is_family` | Menandai apakah tamu datang bersama keluarga |
- | `room_upgraded` | Menandai apakah terjadi upgrade kamar |
-
- Setelah proses transformasi selesai, dataset menjadi lebih bersih dan siap dimasukkan ke dalam Data Warehouse.
-
-
- ### 3️⃣ Load [Pembuatan Data Warehouse]
-
- Tahap ini merupakan proses pemuatan data yang telah dibersihkan ke dalam **Data Warehouse** untuk mendukung analisis lebih lanjut.
-
- Model yang digunakan adalah **Kimball Star Schema**, karena mampu mempermudah proses query dan analisis bisnis.
-
- #### ⭐ Tabel Fakta
- - `fact_booking`  
-   → Menyimpan data utama transaksi pemesanan hotel
-
- #### 📊 Tabel Dimensi
- - `dim_date`  
- - `dim_hotel`  
- - `dim_customer`  
- - `dim_market`  
- - `dim_room`  
-
- Tabel dimensi digunakan untuk menyimpan informasi deskriptif yang berfungsi sebagai konteks dalam proses analisis data.
-
-
+### 1. Extract — Load Raw Data
+ 
+Tahap pertama adalah membaca data mentah dari file CSV ke dalam memori menggunakan pandas.
+ 
+```python
+df_raw = pd.read_csv('hotel_bookings.csv')
+ 
+print(f'Shape     : {df_raw.shape[0]:,} rows × {df_raw.shape[1]} columns')
+print(f'Memory    : {df_raw.memory_usage(deep=True).sum() / 1e6:.1f} MB')
+print(f'Date range: {df_raw.arrival_date_year.min()} – {df_raw.arrival_date_year.max()}')
+```
+ 
+**Temuan pada tahap Extract:**
+ 
+| Kolom | Missing Values | Penanganan |
+|---|---|---|
+| `children` | 4 | Fill dengan 0 |
+| `country` | 488 | Fill dengan `'Unknown'` |
+| `agent` | 16,340 | Fill dengan 0 |
+| `company` | 112,593 | Fill dengan 0 |
+ 
+---
+ 
+### 2. Transform — Data Cleaning & Feature Engineering
+ 
+Tahap ini terdiri dari tiga sub-proses:
+ 
+#### 2.1 Handle Missing Values
+```python
+df['children'] = df['children'].fillna(0).astype(int)
+df['country']  = df['country'].fillna('Unknown')
+df['agent']    = df['agent'].fillna(0)
+df['company']  = df['company'].fillna(0)
+```
+ 
+#### 2.2 Remove Invalid Records
+```python
+# Hapus ADR negatif (tidak valid secara bisnis)
+df = df[df['adr'] >= 0]
+ 
+# Hapus record tanpa tamu (adults + children + babies = 0)
+df = df[(df['adults'] + df['children'] + df['babies']) > 0]
+```
+ 
+#### 2.3 Feature Engineering — Kolom Derivasi
+ 
+| Kolom Baru | Formula / Logika | Tujuan |
+|---|---|---|
+| `arrival_date` | Gabung tahun + bulan + hari | Kolom tanggal tunggal untuk join ke dim_date |
+| `total_nights` | `stays_in_weekend_nights + stays_in_week_nights` | Durasi menginap |
+| `total_guests` | `adults + children + babies` | Jumlah tamu total |
+| `total_revenue` | `adr × total_nights` | Proxy pendapatan per booking |
+| `quarter` | Dari `arrival_date.dt.quarter` | Analisis kuartalan |
+| `is_family` | `children > 0 OR babies > 0` | Flag segmen keluarga |
+| `room_upgraded` | `reserved_room_type ≠ assigned_room_type` | Flag upgrade kamar |
+| `booking_id` | Auto-increment surrogate key | Primary key unik |
+ 
+**Hasil Transform:**
+ 
+```
+Removed 180 invalid rows → 119,210 clean row
+```
+ 
+---
+ 
+### 3. Load — Build Star Schema Data Warehouse
+ 
+Data yang sudah bersih dimuat ke dalam model dimensi berbasis **Kimball Star Schema**.
+ 
+#### Inisialisasi Database
+```python
+conn = sqlite3.connect(':memory:')  # atau ganti path untuk persistent
+```
+ 
+#### Pembuatan Tabel Dimensi
+ 
+**`dim_date`** — Dimensi Waktu
+```sql
+CREATE TABLE dim_date (
+    date_key      INTEGER PRIMARY KEY,   -- format YYYYMMDD
+    full_date     TEXT,
+    year          INTEGER,
+    quarter       TEXT,
+    month_num     INTEGER,
+    month_name    TEXT,
+    week_number   INTEGER,
+    day_of_month  INTEGER
+)
+```
+ 
+**`dim_hotel`** — Dimensi Hotel
+```sql
+CREATE TABLE dim_hotel (
+    hotel_key  INTEGER PRIMARY KEY AUTOINCREMENT,
+    hotel_name TEXT UNIQUE
+)
+```
+ 
+**`dim_customer`** — Dimensi Pelanggan
+```sql
+CREATE TABLE dim_customer (
+    customer_key      INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_type     TEXT,
+    country           TEXT,
+    is_repeated_guest INTEGER,
+    is_family         INTEGER
+)
+```
+ 
+**`dim_market`** — Dimensi Segmen Pasar
+```sql
+CREATE TABLE dim_market (
+    market_key           INTEGER PRIMARY KEY AUTOINCREMENT,
+    market_segment       TEXT,
+    distribution_channel TEXT,
+    deposit_type         TEXT
+)
+```
+ 
+**`dim_room`** — Dimensi Kamar
+```sql
+CREATE TABLE dim_room (
+    room_key           INTEGER PRIMARY KEY AUTOINCREMENT,
+    reserved_room_type TEXT,
+    assigned_room_type TEXT,
+    meal               TEXT
+)
+```
+ 
+**`fact_booking`** — Tabel Fakta Utama
+```sql
+-- Foreign keys ke semua dimensi + measure columns
+booking_id, date_key, hotel_key, customer_key, market_key, room_key,
+is_canceled, lead_time, total_nights, total_guests,
+adr, total_revenue, booking_changes, days_in_waiting_list,
+required_car_parking_spaces, total_of_special_requests, room_upgraded,
+reservation_status
+```
+ 
+**Data Warehouse Summary setelah Load:**
+ 
+```
+── Data Warehouse Summary ──────────────────────────
+  dim_date               1,023 rows
+  dim_hotel                  2 rows
+  dim_customer           3,148 rows
+  dim_market                34 rows
+  dim_room                  45 rows
+  fact_booking         119,210 rows
+```
+ 
+---
 
 ## ✒️ Desain Data Warehouse — Star Schema
 
@@ -203,82 +283,6 @@ Struktur Data Warehouse dirancang menggunakan model Star Schema, di mana tabel f
 - Direct channel menunjukkan cancel rate 30–40% lebih rendah.
 - **Rekomendasi:** Insentif direct booking (best price guarantee, exclusive perks).
 
-
-
----
-
-## 🗃️ Struktur Repositori
-
-```
-hotel-booking-dw/
-│
-├── README.md                    ← Dokumentasi utama (file ini)
-│
-├── notebooks/
-│   └── uts_bi.ipynb             ← Notebook utama: ETL + DW + Analytics
-│
-├── data/
-│   └── hotel_bookings.csv       ← Dataset mentah (download dari Kaggle)
-│
-├── outputs/
-│   ├── hotel_dw.db              ← SQLite Data Warehouse (hasil export)
-│   ├── kpi_dashboard.png        ← Executive KPI dashboard
-│   ├── revenue_trend.png        ← Monthly revenue trend
-│   ├── cancellation_analysis.png ← Cancellation heatmap + lead time
-│   ├── adr_analysis.png         ← ADR seasonality
-│   ├── geo_analysis.png         ← Geographic analysis
-│   └── segment_matrix.png       ← Customer segment matrix
-│
-├── docs/
-│   ├── star_schema_diagram.png  ← Diagram Star Schema
-│   └── etl_lineage.md           ← Dokumentasi ETL field mapping
-│
-└── requirements.txt             ← Python dependencies
-```
-
----
-
-## 🚀 Cara Menjalankan
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/username/hotel-booking-dw.git
-cd hotel-booking-dw
-```
-
-### 2. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Siapkan Dataset
-Download `hotel_bookings.csv` dari [Kaggle](https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand) dan letakkan di folder `data/`.
-
-### 4. Jalankan Notebook
-```bash
-jupyter notebook notebooks/uts_bi.ipynb
-```
-Atau buka langsung di **Google Colab** — semua dependensi diinstall otomatis di awal notebook.
-
-### 5. Akses Data Warehouse
-```python
-import sqlite3
-import pandas as pd
-
-conn = sqlite3.connect('outputs/hotel_dw.db')
-
-# Contoh query
-df = pd.read_sql('''
-    SELECT h.hotel_name, d.year, SUM(f.total_revenue) AS revenue
-    FROM fact_booking f
-    JOIN dim_hotel h ON f.hotel_key = h.hotel_key
-    JOIN dim_date  d ON f.date_key  = d.date_key
-    WHERE f.is_canceled = 0
-    GROUP BY h.hotel_name, d.year
-''', conn)
-print(df)
-```
-
 ---
 
 ## 🌐 Teknologi yang Digunakan
@@ -290,7 +294,7 @@ print(df)
 | **Database** | SQLite3 (built-in) | — |
 | **OLAP Engine** | DuckDB | latest |
 | **Visualization** | Matplotlib, Seaborn | latest |
-| **Notebook** | Jupyter / Google Colab | — |
+| **Notebook** |  Google Colab | — |
 | **DW Architecture** | Kimball Star Schema | — |
 
 
