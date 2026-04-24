@@ -125,7 +125,7 @@ df['company']  = df['company'].fillna(0)
  
 #### 2.2 Remove Invalid Records
 ```python
-# Hapus ADR negatif (tidak valid secara bisnis)
+# Hapus ADR negatif 
 df = df[df['adr'] >= 0]
  
 # Hapus record tanpa tamu (adults + children + babies = 0)
