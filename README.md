@@ -230,7 +230,7 @@ reservation_status
 **Data Warehouse Summary setelah Load:**
  
 ```
-── Data Warehouse Summary ──────────────────────────
+Data Warehouse Summary 
   dim_date               1,023 rows
   dim_hotel                  2 rows
   dim_customer           3,148 rows
