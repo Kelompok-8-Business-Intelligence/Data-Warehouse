@@ -67,7 +67,6 @@ Industri perhotelan menghasilkan data transaksi yang cukup besar setiap harinya,
 2. **Merancang pipeline ETL** yang bersih dan terdokumentasi (Extract, Transform, Load)
 3. **Melakukan analisis OLAP** untuk menjawab pertanyaan bisnis kritis
 4. **Menghasilkan laporan eksekutif** berupa KPI Dashboard dan Business Insights
-5. **Mendokumentasikan ETL lineage** melalui Metadata Repository
 
 ---
 
