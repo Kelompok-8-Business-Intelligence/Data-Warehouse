@@ -263,7 +263,7 @@ Struktur Data Warehouse dirancang menggunakan model Star Schema, di mana tabel f
   Risiko Pembatalan (Kritis)
 - Cancellation rate ~37% **jauh di atas** benchmark industri (~20%).
 - Deposit jenis *Non Refund* terbukti menekan pembatalan secara drastis.
-- **Rekomendasi:** Terapkan kebijakan deposit berlapis — wajibkan non-refundable untuk pemesanan dengan *lead time* > 90 hari.
+- **Rekomendasi:** Terapkan kebijakan deposit berlapis, wajibkan non-refundable untuk pemesanan dengan *lead time* > 90 hari.
 
 ### Insight 3 
   Nilai Tamu Loyal
@@ -278,7 +278,7 @@ Struktur Data Warehouse dirancang menggunakan model Star Schema, di mana tabel f
 
 ### Insight 5 
   Efisiensi Saluran Distribusi
-- *Online Travel Agent (OTA)* menghasilkan volume tertinggi namun juga **cancel rate tertinggi** — mencerminkan tamu yang price-sensitive dan low-commitment.
+- *Online Travel Agent (OTA)* menghasilkan volume tertinggi namun juga **cancel rate tertinggi**, mencerminkan tamu yang price-sensitive dan low-commitment.
 - Direct channel menunjukkan cancel rate 30–40% lebih rendah.
 - **Rekomendasi:** Insentif direct booking (best price guarantee, exclusive perks).
 
