@@ -1,0 +1,45 @@
+market_key,market_segment,distribution_channel,deposit_type
+1,Direct,Direct,No Deposit
+2,Corporate,Corporate,No Deposit
+3,Online TA,TA/TO,No Deposit
+4,Offline TA/TO,TA/TO,No Deposit
+5,Complementary,Direct,No Deposit
+6,Direct,TA/TO,No Deposit
+7,Groups,Direct,No Deposit
+8,Groups,Corporate,No Deposit
+9,Offline TA/TO,Direct,No Deposit
+10,Groups,TA/TO,No Deposit
+11,Corporate,Direct,No Deposit
+12,Groups,TA/TO,Refundable
+13,Groups,TA/TO,Non Refund
+14,Complementary,TA/TO,No Deposit
+15,Groups,Direct,Non Refund
+16,Groups,Corporate,Non Refund
+17,Complementary,Corporate,No Deposit
+18,Online TA,TA/TO,Non Refund
+19,Offline TA/TO,TA/TO,Non Refund
+20,Direct,Corporate,No Deposit
+21,Groups,Direct,Refundable
+22,Corporate,TA/TO,No Deposit
+23,Corporate,Corporate,Non Refund
+24,Corporate,Direct,Non Refund
+25,Direct,Direct,Refundable
+26,Online TA,TA/TO,Refundable
+27,Online TA,Direct,No Deposit
+28,Offline TA/TO,TA/TO,Refundable
+29,Online TA,Corporate,No Deposit
+30,Direct,Direct,Non Refund
+31,Direct,Undefined,No Deposit
+32,Offline TA/TO,Corporate,No Deposit
+33,Direct,TA/TO,Refundable
+34,Undefined,Undefined,No Deposit
+35,Online TA,Undefined,No Deposit
+36,Online TA,GDS,No Deposit
+37,Aviation,Corporate,No Deposit
+38,Offline TA/TO,GDS,No Deposit
+39,Corporate,TA/TO,Non Refund
+40,Offline TA/TO,Corporate,Non Refund
+41,Online TA,Corporate,Non Refund
+42,Corporate,Corporate,Refundable
+43,Aviation,TA/TO,No Deposit
+44,Direct,GDS,No Deposit
